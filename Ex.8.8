@@ -1,0 +1,200 @@
+public class Date
+{
+    private int month;
+    private int day;
+    private int year;
+
+    private static final int[] daysPerMonth =
+            { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+    public Date( int theMonth, int theDay, int theYear )
+    {
+        month = checkMonth( theMonth ); // validate month
+        year = checkYear( theYear ); // validate year
+        day = checkDay( theDay ); // validate day
+        System.out.printf(
+                "Date object constructor for date %s\n", this );
+    }
+    private int checkYear( int testYear )
+    {
+        Calendar currentDate = Calendar.getInstance();
+        int thisYear = currentDate.get(Calendar.YEAR);
+        if ( testYear >= 1949 && testYear <= thisYear ) // validate year
+            return testYear;
+        else
+            throw new IllegalArgumentException( "Minimum date of birth is 2000. Max year allowed is " + thisYear );
+    }
+    private int checkMonth( int testMonth )
+    {
+        if ( testMonth > 0 && testMonth <= 12 ) // validate month
+            return testMonth;
+        else
+            throw new IllegalArgumentException( "month must be 1-12" );
+    }
+    private int checkDay( int testDay )
+    {
+        if ( testDay > 0 && testDay <= daysPerMonth[ month ] ) {
+            return testDay;
+        }
+
+        // check for leap year
+        if ( month == 2 && testDay == 29 && ( year % 400 == 0 ||
+                ( year % 4 == 0 && year % 100 != 0 ) ) )
+
+            return testDay;
+
+        throw new IllegalArgumentException(
+                "day out-of-range for the specified month and year" );
+    }
+
+    public String toString()
+    {
+        return String.format( "%02d/%02d/%02d", day, month, year );
+    } // end method toString
+    public int getMonth() {
+        return month;
+    }
+    public void setMonth(int month) {
+        this.month = month;
+    }
+    public int getDay() {
+        return day;
+    }
+    public void setDay(int day) {
+        this.day = day;
+    }
+    public int getYear() {
+        return year;
+    }
+    public void setYear(int year) {
+        this.year = year;
+    }
+    public static int[] getDayspermonth() {
+        return daysPerMonth;
+    }
+    public Date nextDay(Date whenHired, Employee whoHired) {
+        int month = whenHired.getMonth();
+        Calendar calendar = Calendar.getInstance();
+        switch(month) {
+            case 1:
+                calendar.set(whenHired.getYear(), Calendar.JANUARY, whenHired.getDay());
+                break;
+            case 2:
+                calendar.set(whenHired.getYear(), Calendar.FEBRUARY, whenHired.getDay());
+                break;
+            case 3:
+                calendar.set(whenHired.getYear(), Calendar.MARCH, whenHired.getDay());
+                break;
+            case 4:
+                calendar.set(whenHired.getYear(), Calendar.APRIL, whenHired.getDay());
+                break;
+            case 5:
+                calendar.set(whenHired.getYear(), Calendar.MAY, whenHired.getDay());
+                break;
+            case 6:
+                calendar.set(whenHired.getYear(), Calendar.JUNE, whenHired.getDay());
+                break;
+            case 7:
+                calendar.set(whenHired.getYear(), Calendar.JULY, whenHired.getDay());
+                break;
+            case 8:
+                calendar.set(whenHired.getYear(), Calendar.AUGUST, whenHired.getDay());
+                break;
+            case 9:
+                calendar.set(whenHired.getYear(), Calendar.SEPTEMBER, whenHired.getDay());
+                break;
+            case 10:
+                calendar.set(whenHired.getYear(), Calendar.OCTOBER, whenHired.getDay());
+                break;
+            case 11:
+                calendar.set(whenHired.getYear(), Calendar.NOVEMBER, whenHired.getDay());
+                break;
+            case 12:
+                calendar.set(whenHired.getYear(), Calendar.DECEMBER, whenHired.getDay());
+                break;
+        }
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        whenHired.setDay(calendar.get(Calendar.DAY_OF_MONTH));
+        whenHired.setMonth(calendar.get(Calendar.MONTH) + 1);
+        whenHired.setYear(calendar.get(Calendar.YEAR));
+        return whenHired;
+    }
+}
+package com.company;
+public class Employee
+{
+    private String firstName;
+    private String lastName;
+    private Date birthDate;
+    private Date hireDate;
+
+    public Employee( String first, String last, Date dateOfBirth,
+                     Date dateOfHire )
+    {
+        firstName = first;
+        lastName = last;
+        birthDate = dateOfBirth;
+        hireDate = dateOfHire;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+
+    public String getLastName() {
+        return lastName;
+    }
+
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+
+    public Date getHireDate() {
+        return hireDate;
+    }
+
+
+    public void setHireDate(Date hireDate) {
+        this.hireDate = hireDate;
+    }
+
+    public String toString()
+    {
+        return String.format( "%s, %s  Hired: %s  Birthday: %s\n",
+                lastName, firstName, hireDate, birthDate );
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        Date birth = new Date( 7, 24, 1949 );
+        Date hire = new Date( 12, 27, 1988 );
+        Employee employee = new Employee( "Bob", "Blue", birth, hire );
+        System.out.println( employee );
+
+        for(int j = 0; j <= 7; j++) {
+            Date followingDay = hire.nextDay(hire, employee);
+            System.out.printf( "%s, %s  Hired: %02d/%02d/%d\n",
+                    employee.getLastName(), employee.getFirstName(),
+                    followingDay.getDay(), followingDay.getMonth(), followingDay.getYear() );
+        }
+    }
+}
+
