@@ -1,0 +1,156 @@
+package com.company;
+import java.util.Scanner;
+class Time2
+{
+    private int hour;
+    private int minute;
+    private int second;
+
+    public Time2()
+    {
+        this( 0, 0, 0 );
+    }
+    public Time2( int h )
+    {
+        this( h, 0, 0 );
+    }
+
+    public Time2( int h, int m )
+    {
+        this( h, m, 0 );
+    }
+    public Time2( int h, int m, int s )
+    {
+        setTime( h, m, s );
+    }
+    public Time2( Time2 time )
+    {
+        this( time.getHour(), time.getMinute(), time.getSecond() );
+    }
+    public void setTime( int h, int m, int s )
+    {
+        setHour( h );
+        setMinute( m );
+        setSecond( s );
+    }
+    public void setHour( int h )
+    {
+        if ( h >= 0 && h < 24 )
+            hour = h;
+        else
+            throw new IllegalArgumentException( "Часов может быть от 0 до 23" );
+    }
+    public void setMinute( int m )
+    {
+        if ( m >= 0 && m < 60 )
+            minute = m;
+        else
+            throw new IllegalArgumentException( "Минуты могут быть от 0 до 59" );
+    }
+    public void setSecond( int s )
+    {
+        if ( s >= 0 && s < 60 )
+            second = ( ( s >= 0 && s < 60 ) ? s : 0 );
+        else
+            throw new IllegalArgumentException( "Секунды могут быть от 0 до 59" );
+    }
+    public int getHour()
+    {
+        return hour;
+    } // end method getHour
+    public int getMinute()
+    {
+        return minute;
+    } // end method getMinute
+    public int getSecond()
+    {
+        return second;
+    } // end method getSecond
+    public String toUniversalString()
+    {
+        return String.format(
+                "%02d:%02d:%02d", getHour(), getMinute(), getSecond() );
+    }
+
+    public String toString()
+    {
+        System.out.printf("Время %d:%02d:%02d %s\n",( (getHour() == 0 || getHour() == 12) ? 12 : getHour() % 12 ),
+                getMinute(), getSecond(), ( getHour() < 12 ? "AM" : "PM" ));
+        tick(getHour(), getMinute(), getSecond() );
+        System.out.println("Время будет: ");
+        return String.format( "%d:%02d:%02d %s\n",
+                ( (getHour() == 0 || getHour() == 12) ? 12 : getHour() % 12 ),
+                getMinute(), getSecond(), ( getHour() < 12 ? "AM" : "PM" ) );
+    }
+    public void tick(int hours, int minutes, int seconds) {
+
+        if(seconds == 59) {
+            seconds = 0;
+            setSecond(seconds);
+        }
+        else if(seconds < 59) {
+            setSecond(++seconds);
+        }
+
+        if(minutes == 59) {
+            minutes = 0;
+            setMinute(minutes);
+        }
+        else if((minutes < 59) && (seconds == 0)) {
+            incrementMinute(minutes);
+        }
+
+        if(hours == 23) {
+            hours = 0;
+            setHour(hours);
+        }
+        else if((hours < 23) && (minutes == 0) && (seconds == 0)) {
+            incrementHour(hours);
+        }
+
+    }
+    public void incrementMinute(int min) {
+        setMinute(++min);
+    }
+    public void incrementHour(int hr) {
+        setHour(++hr);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Time2 t1 = new Time2();
+        Time2 t2 = new Time2(2);
+        Time2 t3 = new Time2(21, 34);
+        Time2 t4 = new Time2(23, 59, 59);
+        Time2 t5 = new Time2(t4);
+        System.out.println("t1: ");
+        System.out.printf("   %s\n", t1.toUniversalString());
+        System.out.printf("   %s\n", t1.toString());
+
+        System.out.println(
+                "t2: ");
+        System.out.printf("   %s\n", t2.toUniversalString());
+        System.out.printf("   %s\n", t2.toString());
+
+        System.out.println(
+                "t3: ");
+        System.out.printf("   %s\n", t3.toUniversalString());
+        System.out.printf("   %s\n", t3.toString());
+
+        System.out.println("t4: ");
+        System.out.printf("   %s\n", t4.toUniversalString());
+        System.out.printf("   %s\n", t4.toString());
+
+        System.out.println("t5: ");
+        System.out.printf("   %s\n", t5.toUniversalString());
+        System.out.printf("   %s\n", t5.toString());
+        try {
+            Time2 t6 = new Time2(27, 74, 99);
+        }
+        catch (IllegalArgumentException e) {
+            System.out.printf("\nt6: %s\n",
+                    e.getMessage());
+        }
+    }
+}
