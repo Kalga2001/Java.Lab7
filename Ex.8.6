@@ -1,0 +1,50 @@
+package com.company;
+import java.util.Scanner;
+
+class SavingsAccount {
+
+    private String name;
+    private double balance;
+    public SavingsAccount(String name,double balance) {
+ if(balance<0)
+     System.out.println("Error!");
+ else
+     this.balance=balance;
+ this.name=name;
+    }
+
+    private static double year_procent;
+
+    public static void Year_procent(double procent)
+    {
+        year_procent=procent/100;
+    }
+
+    public void Calc()
+    {
+     double monthly_procent=balance*year_procent/12;
+     System.out.println("Ежемесячный процент: "+monthly_procent);
+     balance+=monthly_procent;
+     System.out.println("Полный счет: "+balance);
+    }
+
+
+}
+
+    public class Main {
+        public static void main(String[] args) {
+            Scanner input=new Scanner(System.in);
+            SavingsAccount saver1=new SavingsAccount("John",2000.00);
+            System.out.println("John(4%): ");
+            SavingsAccount.Year_procent(4);
+            saver1.Calc();
+            SavingsAccount saver2=new SavingsAccount("Angela",3000.00);
+            System.out.println("Angela(4%): ");
+            saver2.Calc();
+            SavingsAccount.Year_procent(5);
+            System.out.println("John(5%): ");
+            saver1.Calc();
+            System.out.println("Angela(5%): ");
+            saver2.Calc();
+    }
+}
